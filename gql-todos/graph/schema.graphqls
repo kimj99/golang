@@ -2,27 +2,30 @@
 #
 # https://gqlgen.com/getting-started/
 
-type Todo {
-  id: ID!
-  text: String!
-  done: Boolean!
-  user: User!
-}
-
-type User {
-  id: ID!
-  name: String!
-}
-
 type Query {
-  todos: [Todo!]!
-}
-
-input NewTodo {
-  text: String!
-  userId: String!
+  character(id:ID!): Character
+  characters(cliqueType:CliqueType!): [Character!]
 }
 
 type Mutation {
-  createTodo(input: NewTodo!): Todo!
+  upsertCharacter(input: CharacterInput!): Character!
+}
+
+enum CliqueType {
+  kooks
+  pogues
+}
+
+type Character {
+  id: ID!
+  name:String!
+  isHero: Boolean
+  cliqueType: CliqueType!
+}
+
+input CharacterInput {
+  name: String!
+  id: String
+  isHero: Boolean
+  cliqueType: CliqueType!
 }
