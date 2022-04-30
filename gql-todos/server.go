@@ -10,6 +10,7 @@ import (
 	"github.com/go-chi/chi"
 	"github.com/kimj99/gql-tools/graph"
 	"github.com/kimj99/gql-tools/graph/generated"
+	"github.com/kimj99/gql-tools/middleware"
 )
 
 const defaultPort = "8080"
@@ -20,7 +21,7 @@ func main() {
 		port = defaultPort
 	}
 	router := chi.NewRouter()
-	//router.Use(auth.HandleAuth())
+	router.Use(middleware.AuthMiddleware())
 	srv := handler.NewDefaultServer(generated.NewExecutableSchema(generated.Config{Resolvers: &graph.Resolver{}}))
 
 	http.Handle("/", playground.Handler("GraphQL playground", "/query"))
