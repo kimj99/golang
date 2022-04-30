@@ -29,3 +29,8 @@ input CharacterInput {
   isHero: Boolean
   cliqueType: CliqueType!
 }
+
+type User {
+  name: String!
+  isAdmin: Boolean!
+}

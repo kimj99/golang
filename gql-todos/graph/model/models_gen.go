@@ -22,6 +22,11 @@ type CharacterInput struct {
 	CliqueType CliqueType `json:"cliqueType"`
 }
 
+type User struct {
+	Name    string `json:"name"`
+	IsAdmin bool   `json:"isAdmin"`
+}
+
 type CliqueType string
 
 const (
