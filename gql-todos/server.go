@@ -8,7 +8,6 @@ import (
 	"github.com/99designs/gqlgen/graphql/handler"
 	"github.com/99designs/gqlgen/graphql/playground"
 	"github.com/go-chi/chi"
-	"github.com/kimj99/golang/utils"
 	"github.com/kimj99/gql-tools/graph"
 	"github.com/kimj99/gql-tools/graph/generated"
 )
@@ -21,7 +20,7 @@ func main() {
 		port = defaultPort
 	}
 	router := chi.NewRouter()
-	router.Use(auth.HandleAuth())
+	//router.Use(auth.HandleAuth())
 	srv := handler.NewDefaultServer(generated.NewExecutableSchema(generated.Config{Resolvers: &graph.Resolver{}}))
 
 	http.Handle("/", playground.Handler("GraphQL playground", "/query"))
