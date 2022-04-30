@@ -3,33 +3,13 @@
 # https://gqlgen.com/getting-started/
 
 type Query {
-  character(id:ID!): Character
-  characters(cliqueType:CliqueType!): [Character!]
   user(id:ID!): User
 }
 
 type Mutation {
-  upsertCharacter(input: CharacterInput!): Character!
-  upsertUser(input: UserInput!): User
-}
+  upsertUser(input: UserInput!): User!
+  validateKey(api_key: String!): Token!
 
-enum CliqueType {
-  kooks
-  pogues
-}
-
-type Character {
-  id: ID!
-  name:String!
-  isHero: Boolean
-  cliqueType: CliqueType!
-}
-
-input CharacterInput {
-  name: String!
-  id: String
-  isHero: Boolean
-  cliqueType: CliqueType!
 }
 
 type User {
@@ -42,4 +22,9 @@ input UserInput {
   id: String
   name: String!
   isAdmin: Boolean!
+}
+
+type Token {
+  token: String!
+  expires_at: Int
 }
