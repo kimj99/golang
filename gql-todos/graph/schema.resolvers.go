@@ -41,6 +41,28 @@ func (r *mutationResolver) UpsertCharacter(ctx context.Context, input model.Char
 	return &character, nil
 }
 
+func (r *mutationResolver) UpsertUser(ctx context.Context, input model.UserInput) (*model.User, error) {
+	id := input.ID
+	var user model.User
+	user.IsAdmin = input.IsAdmin
+	n := len(r.Resolver.UserStore)
+	if n == 0 {
+		r.Resolver.UserStore = make(map[string]model.User)
+	}
+	if id != nil {
+		new_user, ok := r.Resolver.UserStore[*id]
+		if !ok {
+			return nil, fmt.Errorf("not found")
+		}
+		r.Resolver.UserStore[*id] = new_user
+	} else {
+		nid := strconv.Itoa(n + 1)
+		user.ID = nid
+		r.Resolver.UserStore[nid] = user
+	}
+	return &user, nil
+}
+
 func (r *queryResolver) Character(ctx context.Context, id string) (*model.Character, error) {
 	character, ok := r.Resolver.CharacterStore[id]
 	if !ok {
@@ -58,6 +80,14 @@ func (r *queryResolver) Characters(ctx context.Context, cliqueType model.CliqueT
 		}
 	}
 	return characters, nil
+}
+
+func (r *queryResolver) User(ctx context.Context, id string) (*model.User, error) {
+	user, ok := r.Resolver.UserStore[id]
+	if !ok {
+		return nil, fmt.Errorf("not found")
+	}
+	return &user, nil
 }
 
 // Mutation returns generated.MutationResolver implementation.

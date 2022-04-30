@@ -5,10 +5,12 @@
 type Query {
   character(id:ID!): Character
   characters(cliqueType:CliqueType!): [Character!]
+  user(id:ID!): User
 }
 
 type Mutation {
   upsertCharacter(input: CharacterInput!): Character!
+  upsertUser(input: UserInput!): User
 }
 
 enum CliqueType {
@@ -31,6 +33,13 @@ input CharacterInput {
 }
 
 type User {
+  id: ID!
+  name: String!
+  isAdmin: Boolean!
+}
+
+input UserInput {
+  id: String
   name: String!
   isAdmin: Boolean!
 }

@@ -9,6 +9,10 @@ type contextKey struct {
 	name string
 }
 
+func validateAndGetUserID (c ) string {
+	print(c)
+}
+
 func HandleAuth( ) func(http.Handler) http.Handler {
 	return func(next http.Handler) http.Handler {
 		return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {

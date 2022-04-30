@@ -23,8 +23,15 @@ type CharacterInput struct {
 }
 
 type User struct {
+	ID      string `json:"id"`
 	Name    string `json:"name"`
 	IsAdmin bool   `json:"isAdmin"`
+}
+
+type UserInput struct {
+	ID      *string `json:"id"`
+	Name    string  `json:"name"`
+	IsAdmin bool    `json:"isAdmin"`
 }
 
 type CliqueType string

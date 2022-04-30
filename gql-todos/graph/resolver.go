@@ -8,4 +8,5 @@ import "github.com/kimj99/gql-tools/graph/model"
 
 type Resolver struct {
 	CharacterStore map[string]model.Character
+	UserStore      map[string]model.User
 }
