@@ -12,9 +12,14 @@ type BlockInput struct {
 	Contents string  `json:"contents"`
 }
 
+type LoginInput struct {
+	Name     *string `json:"name"`
+	Password *string `json:"password"`
+}
+
 type Token struct {
-	Token     string `json:"token"`
-	ExpiresAt *int   `json:"expires_at"`
+	Token string `json:"token"`
+	User  *User  `json:"user"`
 }
 
 type User struct {
@@ -24,7 +29,8 @@ type User struct {
 }
 
 type UserInput struct {
-	ID      *string `json:"id"`
-	Name    string  `json:"name"`
-	IsAdmin bool    `json:"isAdmin"`
+	ID       *string `json:"id"`
+	Name     string  `json:"name"`
+	Password string  `json:"password"`
+	IsAdmin  bool    `json:"isAdmin"`
 }
