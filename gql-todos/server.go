@@ -7,6 +7,7 @@ import (
 
 	"gql-tools/graph"
 	"gql-tools/graph/generated"
+	"gql-tools/graph/middlewares"
 
 	"github.com/99designs/gqlgen/graphql/handler"
 	"github.com/99designs/gqlgen/graphql/playground"
@@ -21,7 +22,7 @@ func main() {
 		port = defaultPort
 	}
 	router := chi.NewRouter()
-	router.Use()
+	router.Use(middlewares.JWTMiddleWare())
 	srv := handler.NewDefaultServer(generated.NewExecutableSchema(generated.Config{Resolvers: &graph.Resolver{}}))
 
 	http.Handle("/", playground.Handler("GraphQL playground", "/query"))

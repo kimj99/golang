@@ -14,6 +14,11 @@ import (
 )
 
 func (r *mutationResolver) UpsertUser(ctx context.Context, input model.UserInput) (*model.User, error) {
+	// auth := middleware.GetAuthFromContext(ctx)
+
+	// if !auth.Authenticated {
+	// 	return nil, errors.New("Not AUthorized")
+	// }
 	id := input.ID
 	var user model.User
 	user.IsAdmin = input.IsAdmin
@@ -39,6 +44,22 @@ func (r *mutationResolver) GenerateBlock(ctx context.Context, input model.BlockI
 	id := input.ID
 	var block model.Block
 	block.Contents = input.Contents
+	n := len(r.Resolver.BlockStore)
+	if n == 0 {
+		r.Resolver.BlockStore = make(map[string]model.Block)
+	}
+	if id != nil {
+		updated_block, ok := r.Resolver.BlockStore[*id]
+		if !ok {
+			return nil, fmt.Errorf("not found")
+		}
+		r.Resolver.BlockStore[*id] = updated_block
+	} else {
+		nid := strconv.Itoa(n + 1)
+		block.ID = nid
+		r.Resolver.BlockStore[nid] = block
+	}
+	return &block, nil
 }
 
 func (r *mutationResolver) ValidateKey(ctx context.Context, apiKey string) (*model.Token, error) {
@@ -62,7 +83,13 @@ func (r *queryResolver) User(ctx context.Context, id string) (*model.User, error
 }
 
 func (r *queryResolver) Blocks(ctx context.Context) ([]*model.Block, error) {
-	panic(fmt.Errorf("not implemented"))
+	blocks := make([]*model.Block, 0)
+	for idx := range r.Resolver.BlockStore {
+		block := r.Resolver.BlockStore[idx]
+		blocks = append(blocks, &block)
+	}
+
+	return blocks, nil
 }
 
 // Mutation returns generated.MutationResolver implementation.
