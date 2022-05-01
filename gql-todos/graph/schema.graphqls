@@ -10,7 +10,7 @@ type Query {
 type Mutation {
   upsertUser(input: UserInput!): Token!
   generateBlock(input: BlockInput!): Block!
-  login(input: LoginInput!): Token!
+  login(input: LoginInput!): String!
 }
 
 type Block {
@@ -26,6 +26,7 @@ input BlockInput {
 type User {
   id: ID!
   name: String!
+  password: String!
   isAdmin: Boolean!
 }
 

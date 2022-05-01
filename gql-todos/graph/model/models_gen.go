@@ -23,9 +23,10 @@ type Token struct {
 }
 
 type User struct {
-	ID      string `json:"id"`
-	Name    string `json:"name"`
-	IsAdmin bool   `json:"isAdmin"`
+	ID       string `json:"id"`
+	Name     string `json:"name"`
+	Password string `json:"password"`
+	IsAdmin  bool   `json:"isAdmin"`
 }
 
 type UserInput struct {

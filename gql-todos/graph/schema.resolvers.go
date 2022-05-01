@@ -8,39 +8,44 @@ import (
 	"errors"
 	"fmt"
 	"gql-tools/graph/generated"
+	"gql-tools/graph/middlewares"
 	"gql-tools/graph/model"
 	"gql-tools/graph/utils"
 	"strconv"
 )
 
-func (r *mutationResolver) UpsertUser(ctx context.Context, input model.UserInput) (*model.User, error) {
-	// auth := middleware.GetAuthFromContext(ctx)
-
-	// if !auth.Authenticated {
-	// 	return nil, errors.New("Not AUthorized")
-	// }
-	id := input.ID
+func (r *mutationResolver) UpsertUser(ctx context.Context, input model.UserInput) (*model.Token, error) {
 	var user model.User
+
+	var token model.Token
 	user.IsAdmin = input.IsAdmin
+	user.Name = input.Name
+	created_token, err := utils.CreateJWT(user.Name)
+	token.Token = created_token
+	if err != nil {
+		return &token, fmt.Errorf(err.Error())
+	}
 	n := len(r.Resolver.UserStore)
 	if n == 0 {
 		r.Resolver.UserStore = make(map[string]model.User)
-	}
-	if id != nil {
-		new_user, ok := r.Resolver.UserStore[*id]
-		if !ok {
-			return nil, fmt.Errorf("not found")
-		}
-		r.Resolver.UserStore[*id] = new_user
 	} else {
 		nid := strconv.Itoa(n + 1)
 		user.ID = nid
 		r.Resolver.UserStore[nid] = user
 	}
-	return &user, nil
+	return_token := model.Token{
+		Token: token.Token,
+		User:  &user,
+	}
+	return &return_token, nil
 }
 
 func (r *mutationResolver) GenerateBlock(ctx context.Context, input model.BlockInput) (*model.Block, error) {
+	user := middlewares.GetAuthFromContext(ctx)
+	fmt.Println(user)
+	if user == nil {
+		return &model.Block{}, fmt.Errorf("access denied")
+	}
 	id := input.ID
 	var block model.Block
 	block.Contents = input.Contents
@@ -62,15 +67,18 @@ func (r *mutationResolver) GenerateBlock(ctx context.Context, input model.BlockI
 	return &block, nil
 }
 
-func (r *mutationResolver) ValidateKey(ctx context.Context, apiKey string) (*model.Token, error) {
-	if !utils.DecodeAPIKeys(apiKey) {
-		return nil, errors.New("incorrrect key")
+func (r *mutationResolver) Login(ctx context.Context, input model.LoginInput) (string, error) {
+	var user model.User
+	user.Name = *input.Name
+	user.Password = *input.Password
+	auth := utils.DecodeAPIKeys(user.Password)
+	if !auth {
+		return "", errors.New("not auth")
 	}
-
-	token := &model.Token{
-		Token: utils.CreateJWT(),
+	token, err := utils.CreateJWT(user.Name)
+	if err != nil {
+		return "", err
 	}
-
 	return token, nil
 }
 
@@ -100,3 +108,13 @@ func (r *Resolver) Query() generated.QueryResolver { return &queryResolver{r} }
 
 type mutationResolver struct{ *Resolver }
 type queryResolver struct{ *Resolver }
+
+// !!! WARNING !!!
+// The code below was going to be deleted when updating resolvers. It has been copied here so you have
+// one last chance to move it out of harms way if you want. There are two reasons this happens:
+//  - When renaming or deleting a resolver the old code will be put in here. You can safely delete
+//    it when you're done.
+//  - You have helper methods in this file. Move them out to keep these resolver files clean.
+func (r *mutationResolver) ValidateKey(ctx context.Context, apiKey string) (*model.Token, error) {
+	panic("blah")
+}
