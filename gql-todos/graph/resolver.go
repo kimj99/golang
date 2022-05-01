@@ -7,5 +7,6 @@ import "gql-tools/graph/model"
 // It serves as dependency injection for your app, add any dependencies you require here.
 
 type Resolver struct {
-	UserStore map[string]model.User
+	UserStore  map[string]model.User
+	BlockStore map[string]model.Block
 }

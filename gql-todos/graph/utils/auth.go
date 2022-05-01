@@ -10,7 +10,7 @@ import (
 var SECRET = []byte("test-secret-key")
 
 func DecodeAPIKeys(key string) bool {
-	return key != "blah"
+	return key == "blah"
 }
 func CreateJWT() string {
 	token := jwt.New(jwt.SigningMethodHS256)

@@ -37,4 +37,10 @@ func GetTokenFromRequest(r *http.Request) string, error {
 	return token, nil
 }
 
-// func GetAuthFromContext(ctx context.Context)
+func GetAuthFromContext(ctx context.Context) *UserAuth {
+	raw := ctx.Value(userCtxKey)
+	if raw == nil {
+		return nil
+	}
+	return raw.(*UserAuth)
+}

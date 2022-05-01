@@ -2,6 +2,16 @@
 
 package model
 
+type Block struct {
+	ID       string `json:"id"`
+	Contents string `json:"contents"`
+}
+
+type BlockInput struct {
+	ID       *string `json:"id"`
+	Contents string  `json:"contents"`
+}
+
 type Token struct {
 	Token     string `json:"token"`
 	ExpiresAt *int   `json:"expires_at"`

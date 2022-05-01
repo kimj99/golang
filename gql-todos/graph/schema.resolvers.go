@@ -35,6 +35,12 @@ func (r *mutationResolver) UpsertUser(ctx context.Context, input model.UserInput
 	return &user, nil
 }
 
+func (r *mutationResolver) GenerateBlock(ctx context.Context, input model.BlockInput) (*model.Block, error) {
+	id := input.ID
+	var block model.Block
+	block.Contents = input.Contents
+}
+
 func (r *mutationResolver) ValidateKey(ctx context.Context, apiKey string) (*model.Token, error) {
 	if !utils.DecodeAPIKeys(apiKey) {
 		return nil, errors.New("incorrrect key")
@@ -53,6 +59,10 @@ func (r *queryResolver) User(ctx context.Context, id string) (*model.User, error
 		return nil, fmt.Errorf("not found")
 	}
 	return &user, nil
+}
+
+func (r *queryResolver) Blocks(ctx context.Context) ([]*model.Block, error) {
+	panic(fmt.Errorf("not implemented"))
 }
 
 // Mutation returns generated.MutationResolver implementation.
