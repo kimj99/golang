@@ -4,12 +4,24 @@
 
 type Query {
   user(id:ID!): User
+  blocks: [Block!]
 }
 
 type Mutation {
   upsertUser(input: UserInput!): User!
+  generateBlock(input: BlockInput!): Block!
   validateKey(api_key: String!): Token!
 
+}
+
+type Block {
+  id: ID!
+  contents: String!
+}
+
+input BlockInput {
+  id: String
+  contents: String!
 }
 
 type User {
@@ -28,3 +40,4 @@ type Token {
   token: String!
   expires_at: Int
 }
+
